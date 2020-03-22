@@ -138,6 +138,7 @@ public class EnhancerModel {
         this.threadPoolFullExecutor = threadPoolFullExecutor;
     }
 
+    //插入action的地方
     public void merge(Model model) {
         this.actionModel = model.getAction();
     }

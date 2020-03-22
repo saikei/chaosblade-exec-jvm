@@ -28,6 +28,7 @@ public abstract class BeforeEnhancer implements Enhancer {
 
     /**
      * Do fault-inject
+     * 注入关键方法
      *
      * @param targetName      the plugin target name
      * @param classLoader     classloader for the class
@@ -40,14 +41,17 @@ public abstract class BeforeEnhancer implements Enhancer {
     @Override
     public void beforeAdvice(String targetName, ClassLoader classLoader, String className, Object object,
                              Method method, Object[] methodArguments) throws Exception {
+        //验证目标实验是否存在
         if (!ManagerFactory.getStatusManager().expExists(targetName)) {
             return;
         }
+        //初始化model，主要是添加匹配规则，以及构造超时器得异常
         EnhancerModel model = doBeforeAdvice(classLoader, className, object, method, methodArguments);
         if (model == null) {
             return;
         }
         model.setTarget(targetName).setMethod(method).setObject(object).setMethodArguments(methodArguments);
+        //真正注入的地方
         Injector.inject(model);
     }
 

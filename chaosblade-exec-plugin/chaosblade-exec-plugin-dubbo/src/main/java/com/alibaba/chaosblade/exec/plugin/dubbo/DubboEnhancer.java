@@ -52,17 +52,21 @@ public abstract class DubboEnhancer extends BeforeEnhancer {
                                         Method method, Object[]
                                             methodArguments)
         throws Exception {
+        //处理reiceive方法，设置执行器需要操作的channel
+        //对线程池满的支持
         if (method.getName().equals(RECEIVED_METHOD)) {
             // received method for thread pool experiment
             DubboThreadPoolFullExecutor.INSTANCE.setWrappedChannelHandler(object);
             return null;
         }
 
+        //invoker上下文，方法第0个参数，因为切的正是invoke（Invocation)
         Object invocation = methodArguments[0];
         if (object == null || invocation == null) {
             LOGGER.warn("The necessary parameter is null.");
             return null;
         }
+        //
         Object url = getUrl(object, invocation);
         if (url == null) {
             LOGGER.warn("Url is null, can not get necessary values.");
@@ -82,6 +86,7 @@ public abstract class DubboEnhancer extends BeforeEnhancer {
         }
         matcherModel.add(DubboConstant.METHOD_KEY, methodName);
         int timeout = getTimeout(methodName, object, invocation);
+        //找到对应方法的超时timeout
         matcherModel.add(DubboConstant.TIMEOUT_KEY, timeout + "");
 
         if (LOGGER.isDebugEnabled()) {
@@ -89,8 +94,10 @@ public abstract class DubboEnhancer extends BeforeEnhancer {
         }
 
         EnhancerModel enhancerModel = new EnhancerModel(classLoader, matcherModel);
+        //consumer才支持延迟，provider调用没有延迟
+        //主要timeout执行添加异常信息
         enhancerModel.setTimeoutExecutor(createTimeoutExecutor(classLoader, timeout, className));
-
+        //匹配对应得模型，加上provider或者consumer
         postDoBeforeAdvice(enhancerModel);
         return enhancerModel;
     }

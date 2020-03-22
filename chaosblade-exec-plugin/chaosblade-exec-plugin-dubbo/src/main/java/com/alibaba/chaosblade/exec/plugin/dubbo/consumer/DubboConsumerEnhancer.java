@@ -96,11 +96,13 @@ public class DubboConsumerEnhancer extends DubboEnhancer {
     }
 
     @Override
+    //添加匹配
     protected void postDoBeforeAdvice(EnhancerModel enhancerModel) {
         enhancerModel.addMatcher(DubboConstant.CONSUMER_KEY, "true");
     }
 
     @Override
+    //
     protected int getTimeout(String method, Object instance, Object invocation) {
         try {
             Object url = ReflectUtil.invokeMethod(instance, GET_URL, new Object[0], false);

@@ -49,7 +49,7 @@ public interface Enhancer {
      * @param methodArguments
      * @param returnObject
      */
-    void afterAdvice(String targetName, ClassLoader classLoader, String className, Object object,
-                     Method method, Object[] methodArguments, Object returnObject)
-        throws Exception;
+        void afterAdvice(String targetName, ClassLoader classLoader, String className, Object object,
+                         Method method, Object[] methodArguments, Object returnObject)
+            throws Exception;
 }

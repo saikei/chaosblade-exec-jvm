@@ -45,29 +45,38 @@ public class Injector {
 
     /**
      * Inject
+     * 关键注入
      *
      * @param enhancerModel
      * @throws InterruptProcessException
      */
     public static void inject(EnhancerModel enhancerModel) throws InterruptProcessException {
         String target = enhancerModel.getTarget();
+        //列出实验 by 实验目标
         List<StatusMetric> statusMetrics = ManagerFactory.getStatusManager().getExpByTarget(
             target);
+        //遍历实验
         for (StatusMetric statusMetric : statusMetrics) {
             Model model = statusMetric.getModel();
+            //比对
             if (!compare(model, enhancerModel)) {
                 continue;
             }
             try {
                 boolean pass = limitAndIncrease(statusMetric);
+                //超过实验次数或者比重
                 if (!pass) {
                     LOGGER.info("Limited by: {}", JSON.toJSONString(model));
                     break;
                 }
                 LOGGER.info("Match rule: {}", JSON.toJSONString(model));
+                //注入实验模型 action
                 enhancerModel.merge(model);
+                //model描述
                 ModelSpec modelSpec = ManagerFactory.getModelSpecManager().getModelSpec(target);
+                //action描述
                 ActionSpec actionSpec = modelSpec.getActionSpec(model.getActionName());
+                //注入实验，执行器run
                 actionSpec.getActionExecutor().run(enhancerModel);
             } catch (InterruptProcessException e) {
                 throw e;
@@ -91,6 +100,7 @@ public class Injector {
      */
     private static boolean limitAndIncrease(StatusMetric statusMetric) {
         Model model = statusMetric.getModel();
+        //注入的有效次数
         String limitCount = model.getMatcher().get(ModelConstant.EFFECT_COUNT_MATCHER_NAME);
         if (!StringUtil.isBlank(limitCount)) {
             Long count = Long.valueOf(limitCount);
@@ -99,6 +109,7 @@ public class Injector {
             }
             return statusMetric.increaseWithLock(count);
         }
+        //限制得
         String limitPercent = model.getMatcher().get(ModelConstant.EFFECT_PERCENT_MATCHER_NAME);
         if (!StringUtil.isBlank(limitPercent)) {
             Integer percent = Integer.valueOf(limitPercent);

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DubboThreadPoolFullExecutor extends WaitingTriggerThreadPoolFullExecutor {
 
+    //单例
     public static final DubboThreadPoolFullExecutor INSTANCE = new DubboThreadPoolFullExecutor();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DubboThreadPoolFullExecutor.class);

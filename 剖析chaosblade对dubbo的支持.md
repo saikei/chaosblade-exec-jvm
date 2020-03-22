@@ -501,9 +501,10 @@
           }
       }
   ```
-参考以及扩展：
+- 参考以及扩展：
 1.https://dubbo.apache.org/zh-cn/blog
 2.https://github.com/chaosblade-io
 3.https://github.com/alibaba/jvm-sandbox
 4.https://www.infoq.cn/article/TSY4lGjvSfwEuXEBW*Gp
 5.https://www.infoq.cn/article/javaagent-illustrated/
+第一次写技术文章输出，同时感谢我大佬指导：@Stool233

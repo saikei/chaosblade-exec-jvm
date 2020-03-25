@@ -40,10 +40,10 @@ public class TabClientEnhancer extends TafEnhancer {
             return null;
         }
         Object invoker = ReflectUtil.invokeMethod(servantInvokerContext, GET_INVOKER, new Object[0], false);
-        String servantName = ReflectUtil.getFieldValueRecursion(invoker, OBJ_NAME, false);
+        String servantName = ReflectUtil.getSuperclassFieldValue(invoker, OBJ_NAME, false);
         String functionName = ReflectUtil.invokeMethod(servantInvokerContext, GET_METHOD_NAME, new Object[0], false);
 
-        Object config = ReflectUtil.getFieldValueRecursion(invoker, SERVANT_PROXY_CONFIG, false);
+        Object config = ReflectUtil.getSuperclassFieldValue(invoker, SERVANT_PROXY_CONFIG, false);
         int timeout = getTimeOut(functionName, config);
 
         MatcherModel matcherModel = new MatcherModel();
